@@ -1,0 +1,60 @@
+// $定义变量 !default 没有定义锅其他值就使用默认值
+$namespace: 'ry' !default;
+// bem 的b 块
+$block-sel: '-' !default;
+// element 元素
+$elem-sel: '__' !default;
+// modify 特性
+$mod-sel: '--' !default;
+
+// 以ry开头 比如说块 div  class = 'ry-block'
+
+@mixin b($block) {
+    // 定义 按规则生成 命名空间-传进来的名称 #{} 插值语法
+    $B : #{$namespace + $block-sel + $block};
+
+    // 命中样式 返回
+    .#{$B} {
+        // content相当于占位符 替换真正的样式  slot一样
+        @content;
+    }
+}
+
+// 块内的元素 块为父级 &为
+@mixin e($element) {
+    // 读取父级
+    $selector : &;
+    // 父级的类名 + 双下划线 + 传进来的类名
+    $E : #{$selector + $elem-sel + $element};
+
+    // 生成的类名为  .ry-aaa .ry-aaa__inner 
+    // 如果要去除 父级类名 需要加 @at-root
+    @at-root {
+        #{$E} {
+            @content;
+        }
+    }
+
+}
+
+@mixin m($modify) {
+    // 读取父级
+    $selector : &;
+    // 拼装类名
+    $M : #{$selector + $mod-sel + $modify};
+
+    //去除父级类名
+    @at-root {
+        #{$M} {
+            @content;
+        }
+    }
+
+}
+
+// 需要通过配置进行配置 vite.config.ts
+
+@mixin bfc {
+    height: 100%;
+    overflow: hidden;
+}
